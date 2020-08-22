@@ -23,14 +23,14 @@
 #include "feat/wave-reader.h"
 #include "util/common-utils.h"
 
-#ifndef TEST_TIME
-#include <sys/time.h>
-#define TEST_TIME(times) do{\
-        struct timeval cur_time;\
-	    gettimeofday(&cur_time, NULL);\
-	    times = (cur_time.tv_sec * 1000000llu + cur_time.tv_usec) / 1000llu;\
-	}while(0)
-#endif
+// #ifndef TEST_TIME
+// #include <sys/time.h>
+// #define TEST_TIME(times) do{\
+//         struct timeval cur_time;\
+// 	    gettimeofday(&cur_time, NULL);\
+// 	    times = (cur_time.tv_sec * 1000000llu + cur_time.tv_usec) / 1000llu;\
+// 	}while(0)
+// #endif
 
 int main(int argc, char *argv[]) {
 
@@ -157,10 +157,10 @@ int main(int argc, char *argv[]) {
       SubVector<BaseFloat> waveform(wave_data.Data(), this_chan);
       Matrix<BaseFloat> features;
       try {
-        TEST_TIME(start_time);
+        // TEST_TIME(start_time);
         mfcc.ComputeFeatures(waveform, wave_data.SampFreq(),
                              vtln_warp_local, &features);
-        TEST_TIME(end_time);
+        // TEST_TIME(end_time);
         std::cout <<"\033[0;31mMFCC compute features time " << end_time - start_time << " ms. \033[0;39m" << std::endl;
       } catch (...) {
         KALDI_WARN << "Failed to compute features for utterance " << utt;

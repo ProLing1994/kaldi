@@ -23,14 +23,14 @@
 #include "decoder/lattice-faster-decoder.h"
 #include "lat/lattice-functions.h"
 
-#ifndef TEST_TIME
-#include <sys/time.h>
-#define TEST_TIME(times) do{\
-        struct timeval cur_time;\
-	    gettimeofday(&cur_time, NULL);\
-	    times = (cur_time.tv_sec * 1000000llu + cur_time.tv_usec) / 1000llu;\
-	}while(0)
-#endif
+// #ifndef TEST_TIME
+// #include <sys/time.h>
+// #define TEST_TIME(times) do{\
+//         struct timeval cur_time;\
+// 	    gettimeofday(&cur_time, NULL);\
+// 	    times = (cur_time.tv_sec * 1000000llu + cur_time.tv_usec) / 1000llu;\
+// 	}while(0)
+// #endif
 
 namespace kaldi {
 
@@ -619,27 +619,27 @@ void LatticeFasterDecoderTpl<FST, Token>::AdvanceDecoding(DecodableInterface *de
     target_frames_decoded = std::min(target_frames_decoded,
                                      NumFramesDecoded() + max_num_frames);
 
-  unsigned long long start_decode_time = 0, end_decode_time = 0;
-  unsigned long long start_process_emitting_time = 0, end_process_emitting_time = 0;
-  unsigned long long end_process_nonemitting_time = 0;
-  TEST_TIME(start_decode_time);
+  // unsigned long long start_decode_time = 0, end_decode_time = 0;
+  // unsigned long long start_process_emitting_time = 0, end_process_emitting_time = 0;
+  // unsigned long long end_process_nonemitting_time = 0;
+  // TEST_TIME(start_decode_time);
   while (NumFramesDecoded() < target_frames_decoded) {
     if (NumFramesDecoded() % config_.prune_interval == 0) {
       PruneActiveTokens(config_.lattice_beam * config_.prune_scale);
     }
-    TEST_TIME(start_process_emitting_time);
+    // TEST_TIME(start_process_emitting_time);
 
     BaseFloat cost_cutoff = ProcessEmitting(decodable);
-    TEST_TIME(end_process_emitting_time);
-    std::cout <<"\033[0;32mProcess_emitting time: " << end_process_emitting_time - start_process_emitting_time << " ms. \033[0;39m" << std::endl;
+    // TEST_TIME(end_process_emitting_time);
+    // std::cout <<"\033[0;32mProcess_emitting time: " << end_process_emitting_time - start_process_emitting_time << " ms. \033[0;39m" << std::endl;
 
     ProcessNonemitting(cost_cutoff);
-    TEST_TIME(end_process_nonemitting_time);
-    std::cout <<"\033[0;32mProcess_nonemitting time: " << end_process_nonemitting_time - end_process_emitting_time << " ms. \033[0;39m" << std::endl;
+    // TEST_TIME(end_process_nonemitting_time);
+    // std::cout <<"\033[0;32mProcess_nonemitting time: " << end_process_nonemitting_time - end_process_emitting_time << " ms. \033[0;39m" << std::endl;
   }
-  TEST_TIME(end_decode_time);
-  std::cout <<"\033[0;32mTarget_frames_decoded: " << target_frames_decoded << "\033[0;39m" << std::endl;
-  std::cout <<"\033[0;32mDecode time: " << end_decode_time - start_decode_time << " ms. \033[0;39m" << std::endl;
+  // TEST_TIME(end_decode_time);
+  // std::cout <<"\033[0;32mTarget_frames_decoded: " << target_frames_decoded << "\033[0;39m" << std::endl;
+  // std::cout <<"\033[0;32mDecode time: " << end_decode_time - start_decode_time << " ms. \033[0;39m" << std::endl;
 }
 
 // FinalizeDecoding() is a version of PruneActiveTokens that we call
