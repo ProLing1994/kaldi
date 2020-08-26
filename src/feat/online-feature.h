@@ -70,26 +70,6 @@ private:
   int first_available_index_;
 };
 
-// ADD(YuanHuan)
-// RecyclingVector uses two-way deque, push_back takes a long time, uses pointer to optimize
-class FeatureVector {
-public:
-  FeatureVector(int items_capacity);
-
-  Vector<BaseFloat> *At(int index) const;
-
-  void PushBack(Vector<BaseFloat> *item);
-
-  int Size() const;
-
-  ~FeatureVector();
-
-private:
-  Vector<BaseFloat>** items_;
-  int items_capacity_;
-  int items_size_;
-  int first_available_index_;
-};
 
 /// This is a templated class for online feature extraction;
 /// it's templated on a class like MfccComputer or PlpComputer
@@ -156,9 +136,7 @@ class OnlineGenericBaseFeature: public OnlineBaseFeature {
 
   // features_ is the Mfcc or Plp or Fbank features that we have already computed.
 
-  // RecyclingVector features_;
-  // Change(YuanHuan)
-  FeatureVector features_;
+  RecyclingVector features_;
 
   // True if the user has called "InputFinished()"
   bool input_finished_;
@@ -175,22 +153,6 @@ class OnlineGenericBaseFeature: public OnlineBaseFeature {
   // after extracting all the whole frames we can (whatever length of feature
   // will be required for the next phase of computation).
   Vector<BaseFloat> waveform_remainder_;
-  
-  // ADD(YuanHuan)
-  // The intermediate variable of the waveform_remainder_, if the intermediate variable 
-  // is used frequently, Resize will increase the time consumption. Therefore, the 
-  // intermediate variable result will be changed into member variable to reduce the use of operation
-  Vector<BaseFloat> appended_wave_;
-  
-  // ADD(YuanHuan)
-  // appended_wave_ and waveform_remainder_ should have the same size
-  MatrixIndexT waveform_vector_size_;
-
-  // ADD(YuanHuan)
-  // wave windows, Resize will increase the time consumption. Therefore, the 
-  // intermediate variable result will be changed into member variable to reduce the use of operation
-  Vector<BaseFloat> wav_window_;
-  MatrixIndexT wav_window_size_;
 };
 
 typedef OnlineGenericBaseFeature<MfccComputer> OnlineMfcc;
