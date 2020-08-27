@@ -177,7 +177,7 @@ int main(int argc, char *argv[]) {
     nnet3::DecodableNnetSimpleLoopedInfo decodable_info(decodable_opts,
                                                         &am_nnet);
 
-
+    while(1){
     fst::Fst<fst::StdArc> *decode_fst = ReadFstKaldiGeneric(fst_rxfilename);
 
     fst::SymbolTable *word_syms = NULL;
@@ -295,7 +295,7 @@ int main(int argc, char *argv[]) {
         clat_writer.Write(utt, clat);
         KALDI_LOG << "Decoded utterance " << utt;
         num_done++;
-      }
+      } 
     }
     timing_stats.Print(online);
 
@@ -305,7 +305,8 @@ int main(int argc, char *argv[]) {
               << " per frame over " << num_frames << " frames.";
     delete decode_fst;
     delete word_syms; // will delete if non-NULL.
-    return (num_done != 0 ? 0 : 1);
+    }
+    // return (num_done != 0 ? 0 : 1);
   } catch(const std::exception& e) {
     std::cerr << e.what();
     return -1;
