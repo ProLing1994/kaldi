@@ -98,7 +98,7 @@ FeatureVector::FeatureVector(int items_capacity) : items_capacity_(items_capacit
                                                    items_size_(0),
                                                    first_available_index_(0) {
   if(items_capacity_ < 0) 
-    items_capacity_ = 200;
+    items_capacity_ = 2000;
   items_ = new Vector<BaseFloat> *[items_capacity_];
 }
 
