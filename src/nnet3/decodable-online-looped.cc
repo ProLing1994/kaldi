@@ -20,15 +20,7 @@
 #include "nnet3/decodable-online-looped.h"
 #include "nnet3/nnet-utils.h"
 
-// #ifndef TEST_TIME
-// #include <sys/time.h>
-// #define TEST_TIME(times) do{\
-//         struct timeval cur_time;\
-// 	    gettimeofday(&cur_time, NULL);\
-// 	    times = (cur_time.tv_sec * 1000000llu + cur_time.tv_usec) / 1000llu;\
-// 	}while(0)
-// #endif
-// unsigned long long advance_chunk_time = 0;
+
 namespace kaldi {
 namespace nnet3 {
 
@@ -213,7 +205,7 @@ void DecodableNnetLoopedOnlineBase::AdvanceChunk() {
     cu_ivectors.Swap(&ivectors);
     computer_.AcceptInput("ivector", &cu_ivectors);
   }
-  computer_.Run();
+  computer_.Run();  
 
   {
     // Note: it's possible in theory that if you had weird recurrence that went

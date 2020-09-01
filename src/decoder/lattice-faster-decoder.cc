@@ -23,14 +23,6 @@
 #include "decoder/lattice-faster-decoder.h"
 #include "lat/lattice-functions.h"
 
-// #ifndef TEST_TIME
-// #include <sys/time.h>
-// #define TEST_TIME(times) do{\
-//         struct timeval cur_time;\
-// 	    gettimeofday(&cur_time, NULL);\
-// 	    times = (cur_time.tv_sec * 1000000llu + cur_time.tv_usec) / 1000llu;\
-// 	}while(0)
-// #endif
 
 namespace kaldi {
 
@@ -769,27 +761,17 @@ BaseFloat LatticeFasterDecoderTpl<FST, Token>::ProcessEmitting(
     Token *tok = best_elem->val;
     cost_offset = - tok->tot_cost;
 
-    // unsigned long long start_for_loop_time = 0, end_for_loop_time = 0;
-    // int loop_time = 0, loop_ilabel_time = 0;
-    // TEST_TIME(start_for_loop_time);
-
     for (fst::ArcIterator<FST> aiter(*fst_, state);
          !aiter.Done();
          aiter.Next()) {
-      // loop_time++;
       const Arc &arc = aiter.Value();
       if (arc.ilabel != 0) {  // propagate..
-        // loop_ilabel_time++;
-        BaseFloat new_weight = arc.weight.Value() + cost_offset -
+                BaseFloat new_weight = arc.weight.Value() + cost_offset -
             decodable->LogLikelihood(frame, arc.ilabel) + tok->tot_cost;
         if (new_weight + adaptive_beam < next_cutoff)
           next_cutoff = new_weight + adaptive_beam;
       }
     }
-    // TEST_TIME(end_for_loop_time); 
-    // std::cout <<"\033[0;33mFor_loop_LogLikelihood time: " << end_for_loop_time - start_for_loop_time << " ms. \033[0;39m" << std::endl;
-    // std::cout <<"\033[0;33mLoop time: " << loop_time << " \033[0;39m" << std::endl;
-    // std::cout <<"\033[0;33mLoop ilable time: " << loop_ilabel_time << " \033[0;39m" << std::endl;
   }
 
   // Store the offset on the acoustic likelihoods that we're applying.
@@ -811,11 +793,11 @@ BaseFloat LatticeFasterDecoderTpl<FST, Token>::ProcessEmitting(
            aiter.Next()) {
         const Arc &arc = aiter.Value();
         if (arc.ilabel != 0) {  // propagate..
-          BaseFloat ac_cost = cost_offset -
-              decodable->LogLikelihood(frame, arc.ilabel),
-              graph_cost = arc.weight.Value(),
-              cur_cost = tok->tot_cost,
-              tot_cost = cur_cost + ac_cost + graph_cost;
+          const BaseFloat ac_cost = cost_offset -
+              decodable->LogLikelihood(frame, arc.ilabel);
+          const BaseFloat &graph_cost = arc.weight.Value();
+          const BaseFloat &cur_cost = tok->tot_cost;
+          const BaseFloat tot_cost = cur_cost + ac_cost + graph_cost;
           if (tot_cost >= next_cutoff) continue;
           else if (tot_cost + adaptive_beam < next_cutoff)
             next_cutoff = tot_cost + adaptive_beam; // prune by best current token
